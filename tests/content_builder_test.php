@@ -17,6 +17,7 @@
 namespace block_oerexchangequicklinks;
 
 use block_oerexchangequicklinks\local\content_builder;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests for content_builder: scoping by user, dedup by resource, status
@@ -26,8 +27,8 @@ use block_oerexchangequicklinks\local\content_builder;
  * @package    block_oerexchangequicklinks
  * @copyright  2026 Adam Jenkins <adam@wisecat.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \block_oerexchangequicklinks\local\content_builder
  */
+#[CoversClass(content_builder::class)]
 final class content_builder_test extends \advanced_testcase {
     /**
      * Insert a resource row via the same field set local_oerexchange's own
