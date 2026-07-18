@@ -1,0 +1,21 @@
+{
+    "name": "adamjenkins/moodle-block_oerexchangequicklinks",
+    "description": "Dashboard block for the OER Exchange platform: Try it / Download shortcuts for recently sandbox-tried resources.",
+    "type": "moodle-block",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Adam Jenkins",
+            "email": "adam@wisecat.net"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/adamjenkins/moodle-block_oerexchangequicklinks/issues",
+        "source": "https://github.com/adamjenkins/moodle-block_oerexchangequicklinks"
+    },
+    "require": {
+        "moodle/moodle": ">=5.0 <5.3",
+        "moodle/composer-installer": "^1.0",
+        "adamjenkins/moodle-local_oerexchange": "*"
+    }
+}
