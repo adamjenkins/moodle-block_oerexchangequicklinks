@@ -15,7 +15,9 @@ its data and links to its pages.
 
 - Lists a handful of resources you've most recently tried in the sandbox,
   most recent first, with each resource shown once even if you've tried it
-  more than once.
+  more than once. Each row leads with the resource's cover-image thumbnail
+  (a neutral panel of the same size where there is no cover), which is also
+  the block's only link through to the resource's own detail page.
 - **Try it** relaunches the sandbox trial for that resource.
 - **Download** links to the current latest available version of the
   resource — not necessarily the version you originally tried, if a newer

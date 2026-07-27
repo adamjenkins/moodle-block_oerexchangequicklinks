@@ -87,9 +87,13 @@ class block_oerexchangequicklinks extends block_base {
         $sandboxok = (bool) get_config('local_oerexchange', 'sandboxenabled')
             && get_config('local_oerexchange', 'sandboxbaseurl');
 
+        // One query for every thumbnail on show, not one per row.
+        $coverurls = \local_oerexchange\local\cover_image::urls_for(array_map(fn($r) => $r->resourceid, $rows));
+
         $items = '';
         foreach ($rows as $row) {
             $dlurl = new moodle_url('/local/oerexchange/download.php', ['id' => $row->versionid]);
+            $resourceurl = new moodle_url('/local/oerexchange/resource.php', ['id' => $row->resourceid]);
 
             $links = '';
             if ($sandboxok && empty($row->trydisabled) && $row->type !== 'data') {
@@ -117,11 +121,29 @@ class block_oerexchangequicklinks extends block_base {
                 ]
             );
 
+            // The title here has never been a link — the Try it / Download
+            // buttons are the point of this block. The thumbnail therefore
+            // gets its own link to the resource page, which is the one thing
+            // the block was missing a route to, and is announced by the title
+            // it sits beside rather than being hidden like the other blocks'.
+            $thumb = html_writer::link(
+                $resourceurl,
+                \local_oerexchange\local\cover_image::listitem($coverurls[$row->resourceid] ?? null),
+                [
+                    'class' => 'flex-shrink-0',
+                    'aria-label' => get_string('viewresourcefor', 'block_oerexchangequicklinks', $row->title),
+                ]
+            );
+
             $items .= html_writer::tag(
                 'li',
-                html_writer::tag('div', s($row->title), ['class' => 'oerexchangequicklinks-title mb-1']) .
-                html_writer::tag('div', $links, ['class' => 'oerexchangequicklinks-actions']),
-                ['class' => 'oerexchangequicklinks-item mb-3']
+                $thumb . html_writer::div(
+                    html_writer::tag('div', s($row->title), ['class' => 'oerexchangequicklinks-title mb-1']) .
+                    html_writer::tag('div', $links, ['class' => 'oerexchangequicklinks-actions']),
+                    'oerexchangequicklinks-text flex-grow-1',
+                    ['style' => 'min-width:0;']
+                ),
+                ['class' => 'oerexchangequicklinks-item d-flex gap-2 align-items-start mb-3']
             );
         }
 

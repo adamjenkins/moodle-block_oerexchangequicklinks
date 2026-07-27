@@ -33,3 +33,4 @@ $string['pluginname'] = 'OER Exchange: クイックリンク';
 $string['privacy:metadata'] = '「OER Exchange: クイックリンク」ブロックはそれ自体でデータを保存しません。local_oerexchange がすでに記録しているサンドボックス試用データを読み取り専用で表示するものであり、プライバシーの取り扱いについては local_oerexchange 側で文書化されています。';
 $string['tryit'] = '試してみる';
 $string['tryitfor'] = '{$a} を試してみる';
+$string['viewresourcefor'] = '{$a} をExchangeで表示する';

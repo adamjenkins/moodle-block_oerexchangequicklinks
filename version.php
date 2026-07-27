@@ -25,13 +25,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_oerexchangequicklinks';
-$plugin->version   = 2026072700;
+$plugin->version   = 2026072701;
 // 2025041400 = the Moodle 5.0 branching version — matches $supported's floor
 // (and composer.json's ">=5.0 <5.3"); was 2024100700 (Moodle 4.5), which let
 // a site below the tested range install the plugin.
 $plugin->requires  = 2025041400;
 $plugin->supported = [500, 502];
-$plugin->release   = '0.1.1';
+$plugin->release   = '0.1.2';
 $plugin->maturity  = MATURITY_ALPHA;
 
 // This block only makes sense installed alongside the Exchange catalogue

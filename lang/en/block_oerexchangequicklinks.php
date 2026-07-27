@@ -33,3 +33,4 @@ $string['pluginname'] = 'OER Exchange: quick links';
 $string['privacy:metadata'] = 'The OER Exchange: quick links block does not store any data of its own; it displays a read-only view of sandbox trial data already recorded by local_oerexchange, which documents its own privacy handling.';
 $string['tryit'] = 'Try it';
 $string['tryitfor'] = 'Try {$a}';
+$string['viewresourcefor'] = 'View {$a} on the Exchange';

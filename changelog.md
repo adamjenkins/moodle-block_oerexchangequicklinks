@@ -3,6 +3,23 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [0.1.2] - 2026-07-27
+
+### Added
+
+- Each listed resource leads with its cover-image thumbnail
+  (`local_oerexchange\local\cover_image::listitem()`), with a neutral
+  equally sized panel where a resource has no cover so rows stay aligned.
+- The thumbnail links to the resource's detail page — the block previously
+  offered Try it and Download only, with no route to the page itself. It
+  carries its own `aria-label` (new `viewresourcefor` string, EN + JA) since
+  the title beside it is not a link.
+
+### Changed
+
+- Rows are laid out thumbnail-left, text-right.
+- Thumbnail URLs for the whole block are resolved in one batch query.
+
 ## [0.1.1] - 2026-07-27
 
 ### Fixed
