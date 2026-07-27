@@ -37,8 +37,8 @@ $capabilities = [
     ],
 
     'block/oerexchangequicklinks:addinstance' => [
-        'riskbitmask' => RISK_SPAM | RISK_XSS,
-
+        // No riskbitmask: the block has no instance config and renders no
+        // user-authored HTML, so adding it exposes neither XSS nor spam.
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => [

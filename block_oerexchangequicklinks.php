@@ -47,7 +47,7 @@ class block_oerexchangequicklinks extends block_base {
      * @return array
      */
     public function applicable_formats() {
-        return ['my' => true, 'site' => false];
+        return ['my' => true];
     }
 
     /**
@@ -81,20 +81,40 @@ class block_oerexchangequicklinks extends block_base {
             return $this->content;
         }
 
+        // Mirror sandbox_launch.php's own gates: the whole sandbox may be
+        // switched off (or unconfigured), and an author can opt a resource
+        // out — a Try it link in either case is a guaranteed error page.
+        $sandboxok = (bool) get_config('local_oerexchange', 'sandboxenabled')
+            && get_config('local_oerexchange', 'sandboxbaseurl');
+
         $items = '';
         foreach ($rows as $row) {
-            $tryurl = new moodle_url('/local/oerexchange/sandbox_launch.php', ['id' => $row->resourceid]);
             $dlurl = new moodle_url('/local/oerexchange/download.php', ['id' => $row->versionid]);
 
-            $links = html_writer::link(
-                $tryurl,
-                get_string('tryit', 'block_oerexchangequicklinks'),
-                ['class' => 'btn btn-success btn-sm me-2', 'target' => '_blank']
-            );
+            $links = '';
+            if ($sandboxok && empty($row->trydisabled) && $row->type !== 'data') {
+                $tryurl = new moodle_url('/local/oerexchange/sandbox_launch.php', ['id' => $row->resourceid]);
+                $links .= html_writer::link(
+                    $tryurl,
+                    get_string('tryit', 'block_oerexchangequicklinks'),
+                    [
+                        'class' => 'btn btn-success btn-sm me-2',
+                        'target' => '_blank',
+                        'rel' => 'noopener',
+                        // Distinct accessible names: five bare "Try it"
+                        // links are indistinguishable in a screen-reader
+                        // links list (WCAG 2.4.4).
+                        'aria-label' => get_string('tryitfor', 'block_oerexchangequicklinks', $row->title),
+                    ]
+                );
+            }
             $links .= html_writer::link(
                 $dlurl,
                 get_string('download', 'block_oerexchangequicklinks'),
-                ['class' => 'btn btn-outline-primary btn-sm']
+                [
+                    'class' => 'btn btn-outline-primary btn-sm',
+                    'aria-label' => get_string('downloadfor', 'block_oerexchangequicklinks', $row->title),
+                ]
             );
 
             $items .= html_writer::tag(

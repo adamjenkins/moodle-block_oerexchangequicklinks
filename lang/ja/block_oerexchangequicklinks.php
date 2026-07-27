@@ -25,9 +25,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['download'] = 'ダウンロード';
+$string['downloadfor'] = '{$a} をダウンロードする';
 $string['noquicklinks'] = 'OER Exchange で試したリソースは、すぐにアクセスできるようここに表示されます。';
 $string['oerexchangequicklinks:addinstance'] = '新しい「OER Exchange: クイックリンク」ブロックを追加する';
 $string['oerexchangequicklinks:myaddinstance'] = '新しい「OER Exchange: クイックリンク」ブロックをダッシュボードに追加する';
 $string['pluginname'] = 'OER Exchange: クイックリンク';
 $string['privacy:metadata'] = '「OER Exchange: クイックリンク」ブロックはそれ自体でデータを保存しません。local_oerexchange がすでに記録しているサンドボックス試用データを読み取り専用で表示するものであり、プライバシーの取り扱いについては local_oerexchange 側で文書化されています。';
 $string['tryit'] = '試してみる';
+$string['tryitfor'] = '{$a} を試してみる';

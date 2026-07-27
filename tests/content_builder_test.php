@@ -230,4 +230,55 @@ final class content_builder_test extends \advanced_testcase {
         $actualorder = array_map(fn($row) => $row->resourceid, $rows);
         $this->assertSame(array_slice($expectedorder, 0, 5), $actualorder);
     }
+
+    /**
+     * A recently-tried resource with no usable (ready) version must not
+     * consume one of the limited slots while an older eligible resource
+     * goes unshown — the eligibility filter runs before the limit.
+     */
+    public function test_a_resource_without_a_ready_version_does_not_consume_a_slot(): void {
+        $this->resetAfterTest();
+
+        $creator = $this->getDataGenerator()->create_user();
+        $siteid = $this->create_site();
+        $user = $this->getDataGenerator()->create_user();
+
+        $eligible = [];
+        for ($i = 0; $i < 5; $i++) {
+            $resourceid = $this->create_resource($creator->id, $siteid, 'published', "Eligible {$i}");
+            $versionid = $this->create_version($resourceid, 1);
+            $this->create_trial($resourceid, $versionid, $user->id, time() - (10 - $i));
+            $eligible[] = $resourceid;
+        }
+        // The MOST recently tried resource is still parsing its only upload.
+        $parsing = $this->create_resource($creator->id, $siteid, 'published', 'Still parsing');
+        $parsingversion = $this->create_version($parsing, 1, 'parsing');
+        $this->create_trial($parsing, $parsingversion, $user->id, time());
+
+        $rows = content_builder::get_recent_trials_for_user((int) $user->id, 5);
+
+        $this->assertCount(5, $rows, 'all five eligible resources must fill the five slots');
+        $ids = array_map(fn($row) => $row->resourceid, $rows);
+        $this->assertNotContains($parsing, $ids);
+        $this->assertEqualsCanonicalizing($eligible, $ids);
+    }
+
+    public function test_rows_carry_the_author_sandbox_opt_out(): void {
+        $this->resetAfterTest();
+        global $DB;
+
+        $creator = $this->getDataGenerator()->create_user();
+        $siteid = $this->create_site();
+        $user = $this->getDataGenerator()->create_user();
+
+        $resourceid = $this->create_resource($creator->id, $siteid, 'published', 'Opted out');
+        $DB->set_field('local_oerexchange_resources', 'trydisabled', 1, ['id' => $resourceid]);
+        $versionid = $this->create_version($resourceid, 1);
+        $this->create_trial($resourceid, $versionid, $user->id, time());
+
+        $rows = content_builder::get_recent_trials_for_user((int) $user->id);
+
+        $this->assertCount(1, $rows);
+        $this->assertSame(1, $rows[0]->trydisabled);
+    }
 }

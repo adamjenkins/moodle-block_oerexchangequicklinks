@@ -1,6 +1,11 @@
-# Release notes — 0.1.0
+# Release notes — 0.1.1
 
-Initial alpha release: Dashboard block showing Try it / Download shortcuts
-for resources the current user has recently launched a sandbox trial for on
-the OER Exchange, deduplicated by resource and filtered to still-published
-resources, always linking Download at the current latest ready version.
+Review-round hardening. The "Try it" button now honours the Exchange's own
+rules instead of being offered unconditionally: it disappears when the
+sandbox is switched off or unconfigured, when the resource's author has
+opted out of trials, and for data resources (which can never be tried) —
+previously each of those cases was a guaranteed error page. A recently
+tried resource with no usable version no longer wastes one of the five
+slots. Every Try it / Download link now carries a distinct accessible name
+for screen readers, and the installation floor is corrected to Moodle 5.0
+(the plugin was never tested on 4.5, which the old value permitted).

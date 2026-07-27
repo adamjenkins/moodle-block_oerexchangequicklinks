@@ -57,32 +57,35 @@ class content_builder {
         }
 
         // Drop resources that are no longer published (hidden/removed) —
-        // don't show stale links as if they still work.
+        // don't show stale links as if they still work. trydisabled rides
+        // along so the caller can honour the author's sandbox opt-out.
         [$insql, $inparams] = $DB->get_in_or_equal(array_keys($trialtimes), SQL_PARAMS_NAMED);
         $resources = $DB->get_records_select(
             'local_oerexchange_resources',
             "id $insql AND status = :status",
             $inparams + ['status' => 'published'],
             '',
-            'id, title, type'
+            'id, title, type, trydisabled'
         );
 
         if (!$resources) {
             return [];
         }
 
-        // Most-recently-tried resource first, capped to $limit.
+        // Most-recently-tried resource first.
         $order = [];
         foreach (array_keys($resources) as $resourceid) {
             $order[$resourceid] = $trialtimes[$resourceid]->lasttrialtime;
         }
         arsort($order);
-        $topids = array_slice(array_keys($order), 0, $limit);
 
         // The current latest *ready* version per resource — mirrors the
         // lookup resource.php uses for its own Try it / Download buttons,
         // not the versionid stored on the (possibly stale) trial row.
-        [$versql, $verparams] = $DB->get_in_or_equal($topids, SQL_PARAMS_NAMED);
+        // Fetched for every candidate BEFORE the limit is applied, so a
+        // recently-tried resource with no usable version doesn't consume a
+        // slot while an older eligible one goes unshown.
+        [$versql, $verparams] = $DB->get_in_or_equal(array_keys($order), SQL_PARAMS_NAMED);
         $versions = $DB->get_records_select(
             'local_oerexchange_versions',
             "resourceid $versql AND status = :vstatus",
@@ -98,7 +101,10 @@ class content_builder {
         }
 
         $rows = [];
-        foreach ($topids as $resourceid) {
+        foreach (array_keys($order) as $resourceid) {
+            if (count($rows) === $limit) {
+                break;
+            }
             if (!isset($latestversionid[$resourceid])) {
                 // No ready version currently available for this resource —
                 // nothing usable to link to, skip it.
@@ -109,6 +115,7 @@ class content_builder {
                 'resourceid' => (int) $resourceid,
                 'title' => $resource->title,
                 'type' => $resource->type,
+                'trydisabled' => (int) $resource->trydisabled,
                 'versionid' => (int) $latestversionid[$resourceid],
             ];
         }

@@ -25,9 +25,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['download'] = 'Download';
+$string['downloadfor'] = 'Download {$a}';
 $string['noquicklinks'] = 'Resources you try from the OER Exchange will appear here for quick access.';
 $string['oerexchangequicklinks:addinstance'] = 'Add a new OER Exchange: quick links block';
 $string['oerexchangequicklinks:myaddinstance'] = 'Add a new OER Exchange: quick links block to Dashboard';
 $string['pluginname'] = 'OER Exchange: quick links';
 $string['privacy:metadata'] = 'The OER Exchange: quick links block does not store any data of its own; it displays a read-only view of sandbox trial data already recorded by local_oerexchange, which documents its own privacy handling.';
 $string['tryit'] = 'Try it';
+$string['tryitfor'] = 'Try {$a}';
