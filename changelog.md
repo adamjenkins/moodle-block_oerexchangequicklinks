@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.0.0] - 2026-07-29
+
+First stable release. `$plugin->maturity` is now `MATURITY_STABLE`.
+
+No functional change since 0.1.2 — the whole OER Exchange suite moves to 1.0.0
+together, so a site never has a stable plugin depending on an alpha one.
+
 ## [0.1.2] - 2026-07-27
 
 ### Added

@@ -1,11 +1,10 @@
-# Release notes — 0.1.2
+# Release notes — 1.0.0
 
-Each resource in the block now leads with its cover-image thumbnail. Rows
-are laid out thumbnail-left, text-right, and a resource with no cover gets
-an equally sized neutral panel rather than no thumbnail at all, so the list
-keeps its alignment either way. Thumbnail URLs for the whole block are
-resolved in a single query.
+The first stable release. The block is declared `MATURITY_STABLE`.
 
-The thumbnail is also this block's first route to the resource's own page —
-until now it offered only Try it and Download, with no way through to the
-detail page.
+There is **no functional change** since 0.1.2. This release marks the OER
+Exchange suite's first stable version, which all seven plugins take together
+so that a site never has to reason about a stable plugin depending on an alpha
+one. The block's recently tried resources, its Try it and Download shortcuts,
+its honouring of the author's Try-it opt-out, and the cover-image thumbnail
+that doubles as its route to the detail page are all unchanged.
