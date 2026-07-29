@@ -1,0 +1,31 @@
+# camp listing manifest — descriptive content for your plugin's page.
+# Edit freely and commit; camp ingests this file at each tagged release.
+# Schema: https://camp-registry.org/schema/listing.schema.json
+name: "OER Exchange: quick links"
+summary: "A Dashboard block for the OER Exchange platform, showing Try it and Download shortcuts for the resources you have recently launched a sandbox trial for."
+description: |
+  Saves going back through the full catalogue page to reach a resource you have
+  already tried.
+
+  - Lists a handful of the resources you most recently tried in the sandbox,
+    most recent first, each shown once however many times you tried it. Every
+    row leads with the resource's cover-image thumbnail, or a neutral panel of
+    the same size where there is no cover; the thumbnail is also the block's
+    only link through to the resource's own detail page.
+  - **Try it** relaunches the sandbox trial for that resource.
+  - **Download** links to the current latest available version, which is not
+    necessarily the version you originally tried if a newer one has since been
+    published.
+  - Resources that are no longer published, having been hidden or removed since
+    your trial, are left off the list.
+
+  Requires the companion catalogue plugin `local_oerexchange` on the same site.
+  This block only reads its data and links to its pages.
+labels:
+  - fully-free
+links:
+  docs: https://github.com/adamjenkins/moodle-block_oerexchangequicklinks#readme
+  issues: https://github.com/adamjenkins/moodle-block_oerexchangequicklinks/issues
+# screenshots:
+#   - path: .camp/screenshots/overview.png
+#     caption: Main view
