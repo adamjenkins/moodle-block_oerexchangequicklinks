@@ -1,10 +1,13 @@
-# Release notes — 1.0.0
+# Release notes — 1.0.1
 
-The first stable release. The block is declared `MATURITY_STABLE`.
+No change to the plugin itself. This release exists to fix release
+publication to the camp registry: the previous release workflow pinned
+camp-tools v0.2.25, whose index-entry schema predates the `source-repo-id`
+field the registry added to every claimed entry on 2026-07-28 (OIDC trusted
+publishing), so publication of v1.0.0 could not succeed. The workflow is
+replaced with the registry's current tokenless template (OIDC trusted
+publishing, camp-tools v0.2.35); no access token, fork or repository secret
+is needed any more.
 
-There is **no functional change** since 0.1.2. This release marks the OER
-Exchange suite's first stable version, which all seven plugins take together
-so that a site never has to reason about a stable plugin depending on an alpha
-one. The block's recently tried resources, its Try it and Download shortcuts,
-its honouring of the author's Try-it opt-out, and the cover-image thumbnail
-that doubles as its route to the detail page are all unchanged.
+The installable plugin code is identical to 1.0.0 apart from the version
+metadata — the workflow file is excluded from the distribution ZIP.
