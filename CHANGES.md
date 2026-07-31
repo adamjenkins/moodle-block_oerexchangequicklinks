@@ -1,13 +1,15 @@
-# Release notes — 1.0.1
+# Release notes — 1.0.2
 
-No change to the plugin itself. This release exists to fix release
-publication to the camp registry: the previous release workflow pinned
-camp-tools v0.2.25, whose index-entry schema predates the `source-repo-id`
-field the registry added to every claimed entry on 2026-07-28 (OIDC trusted
-publishing), so publication of v1.0.0 could not succeed. The workflow is
-replaced with the registry's current tokenless template (OIDC trusted
-publishing, camp-tools v0.2.35); no access token, fork or repository secret
-is needed any more.
+The visible title in this block's Try it / Download shortcut list previously
+rendered any multilang markup as literal text, even with the site's multilang
+filter enabled — a live, user-reported bug on the Exchange. It now renders
+through the site's filters, matching `block_oerexchangeshares`'s
+already-correct pattern.
 
-The installable plugin code is identical to 1.0.0 apart from the version
-metadata — the workflow file is excluded from the distribution ZIP.
+Fixing the visible title left the Try it, Download and thumbnail
+accessibility labels (`aria-label`) still carrying the raw, unfiltered title,
+so a screen reader would read out the literal multilang markup even though
+the visible text was already correct. Those three labels are now filtered
+too, and a title containing "&" is escaped exactly once in each.
+
+No database or capability changes. No action is required after upgrading.
