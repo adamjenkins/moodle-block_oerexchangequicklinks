@@ -95,6 +95,15 @@ class block_oerexchangequicklinks extends block_base {
             $dlurl = new moodle_url('/local/oerexchange/download.php', ['id' => $row->versionid]);
             $resourceurl = new moodle_url('/local/oerexchange/resource.php', ['id' => $row->resourceid]);
 
+            // Filtered once per row: $formattedtitle is escaped HTML for the
+            // visible title (placed directly as tag content below).
+            // $plaintitle decodes that back to plain text for use inside
+            // aria-label attributes — html_writer escapes attribute values
+            // itself, so feeding it already-escaped output would double
+            // escape (e.g. "&" -> "&amp;amp;") and be read aloud wrongly.
+            $formattedtitle = format_string($row->title, true, ['context' => \core\context\system::instance()]);
+            $plaintitle = html_entity_decode($formattedtitle, ENT_QUOTES, 'UTF-8');
+
             $links = '';
             if ($sandboxok && empty($row->trydisabled) && $row->type !== 'data') {
                 $tryurl = new moodle_url('/local/oerexchange/sandbox_launch.php', ['id' => $row->resourceid]);
@@ -108,7 +117,7 @@ class block_oerexchangequicklinks extends block_base {
                         // Distinct accessible names: five bare "Try it"
                         // links are indistinguishable in a screen-reader
                         // links list (WCAG 2.4.4).
-                        'aria-label' => get_string('tryitfor', 'block_oerexchangequicklinks', $row->title),
+                        'aria-label' => get_string('tryitfor', 'block_oerexchangequicklinks', $plaintitle),
                     ]
                 );
             }
@@ -117,7 +126,7 @@ class block_oerexchangequicklinks extends block_base {
                 get_string('download', 'block_oerexchangequicklinks'),
                 [
                     'class' => 'btn btn-outline-primary btn-sm',
-                    'aria-label' => get_string('downloadfor', 'block_oerexchangequicklinks', $row->title),
+                    'aria-label' => get_string('downloadfor', 'block_oerexchangequicklinks', $plaintitle),
                 ]
             );
 
@@ -131,7 +140,7 @@ class block_oerexchangequicklinks extends block_base {
                 \local_oerexchange\local\cover_image::listitem($coverurls[$row->resourceid] ?? null),
                 [
                     'class' => 'flex-shrink-0',
-                    'aria-label' => get_string('viewresourcefor', 'block_oerexchangequicklinks', $row->title),
+                    'aria-label' => get_string('viewresourcefor', 'block_oerexchangequicklinks', $plaintitle),
                 ]
             );
 
@@ -140,7 +149,7 @@ class block_oerexchangequicklinks extends block_base {
                 $thumb . html_writer::div(
                     html_writer::tag(
                         'div',
-                        format_string($row->title, true, ['context' => \core\context\system::instance()]),
+                        $formattedtitle,
                         ['class' => 'oerexchangequicklinks-title mb-1']
                     ) .
                     html_writer::tag('div', $links, ['class' => 'oerexchangequicklinks-actions']),

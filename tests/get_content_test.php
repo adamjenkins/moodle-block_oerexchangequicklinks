@@ -82,6 +82,16 @@ final class get_content_test extends \advanced_testcase {
         set_config('sandboxbaseurl', 'https://example.com/try/', 'local_oerexchange');
     }
 
+    /**
+     * format_string() (used for the visible title, and — via $plaintitle —
+     * now for the three aria-labels too) strips unfiltered markup outright
+     * rather than escaping it, so a raw `<script>` title never survives in
+     * the output at all, executable or otherwise. (Before the aria-label
+     * fix, this test's old assertion of literal "&lt;script&gt;" in $html
+     * only ever passed because the aria-labels still interpolated the RAW
+     * title, and html_writer's own attribute-escaping produced that exact
+     * substring — an accidental pass riding on the very bug fixed above.)
+     */
     public function test_titles_from_federated_sites_are_escaped(): void {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
@@ -91,7 +101,8 @@ final class get_content_test extends \advanced_testcase {
         $html = $this->render();
 
         $this->assertStringNotContainsString('<script>alert(1)</script>', $html);
-        $this->assertStringContainsString('&lt;script&gt;', $html);
+        $this->assertStringNotContainsString('&lt;script&gt;', $html);
+        $this->assertStringContainsString('alert(1)Evil', $html);
     }
 
     public function test_try_it_appears_only_when_the_sandbox_is_configured_on(): void {
@@ -123,19 +134,16 @@ final class get_content_test extends \advanced_testcase {
     }
 
     /**
-     * Regression test: the visible title (:141, s($row->title)) used to
+     * Regression test: the visible title (:152, $formattedtitle) used to
      * render as raw `<span lang="en" class="multilang">...` markup instead
      * of collapsing to one language. Enables the filter trio locally rather
      * than relying on site config, and pins the double-escape guard (a
      * title containing `&` must be escaped exactly once).
      *
      * Scoped to the title <div> specifically, not the whole block markup:
-     * this block's Try it/Download aria-labels (get_string(...,
-     * $row->title) around :111/:120/:134) still interpolate the RAW title —
-     * out of scope for this fix (only :141 was in scope) — so they still
-     * carry the unfiltered span markup in escaped-attribute form, and
-     * asserting over the whole $html would incorrectly flag that
-     * pre-existing, separately-scoped gap as a failure of this fix.
+     * the aria-label assertions live in
+     * test_aria_labels_render_through_multilang_and_escape_ampersand_once_each()
+     * below.
      */
     public function test_titles_render_through_multilang_and_escape_ampersand_once(): void {
         $this->resetAfterTest();
@@ -164,6 +172,45 @@ final class get_content_test extends \advanced_testcase {
         $this->assertStringNotContainsString('読み書き', $titledivcontent);
         $this->assertStringNotContainsString('multilang', $titledivcontent);
         $this->assertSame(1, substr_count($titledivcontent, '&amp;'));
+    }
+
+    /**
+     * Regression test: the three aria-label attributes (tryitfor/:120,
+     * downloadfor/:129, viewresourcefor/:143) used to interpolate the raw
+     * $row->title, so a screen reader read out the literal
+     * `<span lang="en" class="multilang">...` markup. They must instead
+     * carry the multilang-filtered, plain-text title — decoded back out of
+     * format_string()'s escaped HTML output before being handed to
+     * html_writer, which does its own (single) attribute escaping.
+     */
+    public function test_aria_labels_render_through_multilang_and_escape_ampersand_once_each(): void {
+        $this->resetAfterTest();
+        $this->enable_sandbox();
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        set_config('filterall', 1);
+        set_config('stringfilters', 'multilang');
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+        $this->seed_trial(
+            (int) $user->id,
+            '<span lang="en" class="multilang">Reading &amp; Writing</span>'
+                . '<span lang="ja" class="multilang">読み書き</span>'
+        );
+
+        $html = $this->render();
+
+        preg_match_all('/aria-label="([^"]*)"/', $html, $matches);
+        $arialabels = $matches[1];
+
+        // One aria-label each for Try it, Download, and the thumbnail link.
+        $this->assertCount(3, $arialabels);
+        foreach ($arialabels as $label) {
+            $this->assertStringContainsString('Reading &amp; Writing', $label);
+            $this->assertStringNotContainsString('読み書き', $label);
+            $this->assertStringNotContainsString('<span', $label);
+            $this->assertSame(1, substr_count($label, '&amp;'));
+        }
     }
 
     public function test_data_resources_never_offer_try_it(): void {
