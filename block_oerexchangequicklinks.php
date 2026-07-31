@@ -138,7 +138,11 @@ class block_oerexchangequicklinks extends block_base {
             $items .= html_writer::tag(
                 'li',
                 $thumb . html_writer::div(
-                    html_writer::tag('div', s($row->title), ['class' => 'oerexchangequicklinks-title mb-1']) .
+                    html_writer::tag(
+                        'div',
+                        format_string($row->title, true, ['context' => \core\context\system::instance()]),
+                        ['class' => 'oerexchangequicklinks-title mb-1']
+                    ) .
                     html_writer::tag('div', $links, ['class' => 'oerexchangequicklinks-actions']),
                     'oerexchangequicklinks-text flex-grow-1',
                     ['style' => 'min-width:0;']

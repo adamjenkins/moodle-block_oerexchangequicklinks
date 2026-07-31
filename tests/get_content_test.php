@@ -122,6 +122,50 @@ final class get_content_test extends \advanced_testcase {
         $this->assertSame(2, substr_count($html, 'download.php'));
     }
 
+    /**
+     * Regression test: the visible title (:141, s($row->title)) used to
+     * render as raw `<span lang="en" class="multilang">...` markup instead
+     * of collapsing to one language. Enables the filter trio locally rather
+     * than relying on site config, and pins the double-escape guard (a
+     * title containing `&` must be escaped exactly once).
+     *
+     * Scoped to the title <div> specifically, not the whole block markup:
+     * this block's Try it/Download aria-labels (get_string(...,
+     * $row->title) around :111/:120/:134) still interpolate the RAW title —
+     * out of scope for this fix (only :141 was in scope) — so they still
+     * carry the unfiltered span markup in escaped-attribute form, and
+     * asserting over the whole $html would incorrectly flag that
+     * pre-existing, separately-scoped gap as a failure of this fix.
+     */
+    public function test_titles_render_through_multilang_and_escape_ampersand_once(): void {
+        $this->resetAfterTest();
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        set_config('filterall', 1);
+        set_config('stringfilters', 'multilang');
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+        $this->seed_trial(
+            (int) $user->id,
+            '<span lang="en" class="multilang">Reading &amp; Writing</span>'
+                . '<span lang="ja" class="multilang">読み書き</span>'
+        );
+
+        $html = $this->render();
+
+        $this->assertMatchesRegularExpression(
+            '#<div class="oerexchangequicklinks-title mb-1">([^<]*)</div>#',
+            $html
+        );
+        preg_match('#<div class="oerexchangequicklinks-title mb-1">([^<]*)</div>#', $html, $matches);
+        $titledivcontent = $matches[1];
+
+        $this->assertSame('Reading &amp; Writing', $titledivcontent);
+        $this->assertStringNotContainsString('読み書き', $titledivcontent);
+        $this->assertStringNotContainsString('multilang', $titledivcontent);
+        $this->assertSame(1, substr_count($titledivcontent, '&amp;'));
+    }
+
     public function test_data_resources_never_offer_try_it(): void {
         $this->resetAfterTest();
         $this->enable_sandbox();
