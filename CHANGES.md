@@ -1,3 +1,10 @@
+# Release notes — Unreleased
+
+Declare Moodle 5.3 support. The block now declares itself supported on
+Moodle 5.0 through 5.3. No code changes were needed for 5.3.
+
+No database or capability changes. No action is required after upgrading.
+
 # Release notes — 1.0.2
 
 The visible title in this block's Try it / Download shortcut list previously
