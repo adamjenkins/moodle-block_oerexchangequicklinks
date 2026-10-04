@@ -1,22 +1,10 @@
-# Release notes — Unreleased
+# Release notes — 1.0.3
 
 Declare Moodle 5.3 support. The block now declares itself supported on
-Moodle 5.0 through 5.3. No code changes were needed for 5.3.
+Moodle 5.0 through 5.3. No code changes were needed for 5.3. Its
+`composer.json` now admits Moodle 5.3 too (`>=5.0 <5.4`), so the plugin can
+be installed with Composer on a 5.3 site.
 
-No database or capability changes. No action is required after upgrading.
-
-# Release notes — 1.0.2
-
-The visible title in this block's Try it / Download shortcut list previously
-rendered any multilang markup as literal text, even with the site's multilang
-filter enabled — a live, user-reported bug on the Exchange. It now renders
-through the site's filters, matching `block_oerexchangeshares`'s
-already-correct pattern.
-
-Fixing the visible title left the Try it, Download and thumbnail
-accessibility labels (`aria-label`) still carrying the raw, unfiltered title,
-so a screen reader would read out the literal multilang markup even though
-the visible text was already correct. Those three labels are now filtered
-too, and a title containing "&" is escaped exactly once in each.
+The distribution ZIP now includes the plugin's `tests/` directory.
 
 No database or capability changes. No action is required after upgrading.
