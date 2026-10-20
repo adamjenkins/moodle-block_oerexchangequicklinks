@@ -3,6 +3,15 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.0.5] - 2026-10-20
+
+### Added
+
+- A plugin icon now appears beside the plugin on Site administration, Plugins,
+  Plugins overview.
+- The camp listing (`.camp/listing.yml`) now carries screenshots with captions.
+  They are excluded from the plugin ZIP.
+
 ## [1.0.4] - 2026-10-04
 
 ### Changed

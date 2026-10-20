@@ -26,6 +26,6 @@ labels:
 links:
   docs: https://github.com/adamjenkins/moodle-block_oerexchangequicklinks#readme
   issues: https://github.com/adamjenkins/moodle-block_oerexchangequicklinks/issues
-# screenshots:
-#   - path: .camp/screenshots/overview.png
-#     caption: Main view
+screenshots:
+  - path: .camp/screenshots/01-dashboard.png
+    caption: "Try it and Download for the resources you tried most recently."
