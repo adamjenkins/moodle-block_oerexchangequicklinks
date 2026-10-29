@@ -1,7 +1,6 @@
-# Release notes — 1.0.5
+# Release notes — 1.0.6
 
-- A plugin icon now appears beside the plugin on Site administration, Plugins, Plugins overview.
-- The camp listing (`.camp/listing.yml`) now carries screenshots with captions. They are
-  excluded from the plugin ZIP.
+- CI now also tests Moodle 5.1 (`MOODLE_501_STABLE`), which the plugin has always declared
+  supported.
 
 No code, database or capability changes.

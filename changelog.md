@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.0.6] - 2026-10-29
+
+### Changed
+
+- CI now also tests Moodle 5.1 (`MOODLE_501_STABLE`), which the plugin has
+  always declared supported.
+
 ## [1.0.5] - 2026-10-20
 
 ### Added
